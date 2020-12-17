@@ -5,7 +5,7 @@
 # is restricted to this project.
 
 # General application configuration
-use Mix.Config
+import Config
 
 config :septa_gong,
   ecto_repos: [SeptaGong.Repo]
