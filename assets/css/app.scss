@@ -1,6 +1,8 @@
 /* This file is for your main application css. */
 @import "./phoenix.css";
 @import "../node_modules/nprogress/nprogress.css";
+@import "../node_modules/animate.css/animate.css";
+
 
 /* LiveView specific classes for your customizations */
 .phx-no-feedback.invalid-feedback,
@@ -88,4 +90,14 @@
   color: #a94442;
   display: block;
   margin: -1rem 0 2rem;
+}
+
+.gong {
+  width: 512px;
+  height: 512px;
+  background: url("/images/gong-still.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  margin-left: auto;
+  margin-right: auto;
 }

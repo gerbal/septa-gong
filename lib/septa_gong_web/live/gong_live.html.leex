@@ -2,7 +2,12 @@
   <h1>I'm a Gong</h1>
 
 
-  <button phx-click="gong">Gong</button>
+
+<div class="gong" phx-click="gong">
+  <%= if @ringing do %>
+    <img class="<%= @button_class %>" src="/images/gong-struck.png">
+  <% end %>
+  </div>
 
   <div style="display: hidden;" id="sound-fx">
     <%= for sound <- @sounds do %>
