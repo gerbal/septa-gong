@@ -1,0 +1,13 @@
+<section class="phx-hero">
+  <h1>I'm a Gong</h1>
+
+
+  <button phx-click="gong">Gong</button>
+
+  <div style="display: hidden;" id="sound-fx">
+    <%= for sound <- @sounds do %>
+      <%= SeptaGong.SoundEffectRenderer.render(sound) %>
+    <% end %>
+  </div>
+
+</section>
