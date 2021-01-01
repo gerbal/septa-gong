@@ -1,5 +1,16 @@
 # SeptaGong
 
+A Multiplayer Phoenix Liveview gong!
+
+## Todo: 
+ - [ ] Write readme
+ - [ ] Gong Channels
+ 
+ ## Credits 
+  - <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+
+## Default Readme
+
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
