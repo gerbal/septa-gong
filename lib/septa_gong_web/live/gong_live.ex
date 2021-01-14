@@ -4,16 +4,17 @@ defmodule SeptaGongWeb.GongLive do
 
   require Logger
   @impl true
-  def mount(_params, _session, socket) do
-    Phoenix.PubSub.subscribe(SeptaGong.PubSub, "users")
+  def mount(%{"id" => topic}, _session, socket) do
+    Phoenix.PubSub.subscribe(SeptaGong.PubSub, topic)
 
-    {:ok, assign(socket, sounds: [], anim_class: "", ringing: false, clear_after: 0),
+    {:ok, assign(socket, sounds: [], anim_class: "", ringing: false, clear_after: 0, topic: topic),
      temporary_assigns: [anim_class: ""]}
   end
 
   @impl true
-  def handle_event("gong", _, socket) do
-    Phoenix.PubSub.broadcast(SeptaGong.PubSub, "users", "gong")
+  def handle_event("gong", args, socket) do
+    topic = socket.assigns.topic
+    Phoenix.PubSub.broadcast(SeptaGong.PubSub, topic, "gong")
 
     {:noreply, socket}
   end

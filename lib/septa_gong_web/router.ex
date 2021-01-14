@@ -16,8 +16,9 @@ defmodule SeptaGongWeb.Router do
 
   scope "/", SeptaGongWeb do
     pipe_through :browser
+    get "/", RedirectController, :index
 
-    live "/", GongLive, :index
+    live "/channel/:id", GongLive, :index
   end
 
   # Other scopes may use custom stacks.
