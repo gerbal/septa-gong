@@ -1,18 +1,16 @@
+ <audio id="gong-audio" src="/sfx/gong.wav" preload=false type="audio/wav"></audio>
+ <audio id="voice-audio" src="/sfx/voice.wav" preload=false type="audio/wav"></audio>
+
 <section class="phx-hero">
   <h1>I'm a Gong</h1>
 
-<a href="#" phx-click="gong">
+<a id="gong-click" href="#" phx-click="gong" phx-hook="Gong">
 <div class="gong">
   <%= if @ringing do %>
     <img class="<%= @anim_class %>" src="/images/gong-struck.png">
   <% end %>
   </div>
 
-  <div style="display: hidden;" id="sound-fx">
-    <%= for sound <- @sounds do %>
-      <%= SeptaGong.SoundEffectRenderer.render(sound) %>
-    <% end %>
-  </div>
 </a>
 
 </section>

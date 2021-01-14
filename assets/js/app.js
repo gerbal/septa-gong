@@ -13,14 +13,36 @@ import "../css/app.scss"
 //     import socket from "./socket"
 //
 import "phoenix_html"
-import {Socket} from "phoenix"
+import { Socket } from "phoenix"
 import NProgress from "nprogress"
-import {LiveSocket} from "phoenix_live_view"
+import { LiveSocket } from "phoenix_live_view"
 
-console.log("hi");
+// console.log("hi");
+
+let Hooks = {}
+
+Hooks.Gong = {
+    mounted() {
+        console.log("mounted")
+        this.el.addEventListener("gong", e => {
+
+            console.log(e)
+        })
+        this.handleEvent("gong", (vars) => {
+
+            const sound = document.getElementById("gong-audio");
+            sound.pause();
+            sound.currentTime = 0;
+            sound.play();
+
+            console.log("GONG");
+        })
+    },
+
+}
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})
+let liveSocket = new LiveSocket("/live", Socket, { params: { _csrf_token: csrfToken }, hooks: Hooks })
 
 // Show progress bar on live navigation and form submits
 window.addEventListener("phx:page-loading-start", info => NProgress.start())
@@ -34,3 +56,23 @@ liveSocket.connect()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
+
+// preload Audio Divs to maybe allow to be played in ios
+function unlockAudio() {
+    const sound = document.getElementById("gong-audio");
+    const sound_2 = document.getElementById("voice-audio");
+
+    const promise = sound.play();
+
+    if (promise !== undefined) {
+        promise.then(() => { }).catch(error => console.error);
+    }
+    sound.pause();
+    sound.currentTime = 0;
+    document.body.removeEventListener('click', unlockAudio)
+    document.body.removeEventListener('touchstart', unlockAudio)
+}
+
+document.body.addEventListener('click', unlockAudio);
+document.body.addEventListener('touchstart', unlockAudio);
+
