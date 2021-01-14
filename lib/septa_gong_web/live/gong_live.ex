@@ -28,28 +28,21 @@ defmodule SeptaGongWeb.GongLive do
     {:noreply, assign(socket, anim_class: "", ringing: false)}
   end
 
-  def handle_info(:sound_gong, %{assigns: %{sounds: sounds}} = socket)
-      when length(sounds) >= 10 do
-    Process.send_after(self(), :clear_anim, 3000)
-    Process.send_after(self(), :cleanup_audio, 2_000)
-
-    {:noreply,
-     assign(socket,
-       sounds: [SoundEffect.new(:voice) | sounds],
-       anim_class: "animate__animated animate__slower animate__fadeOut",
-       ringing: true,
-       clear_after: DateTime.add(DateTime.utc_now(), 3000, :millisecond),
-       voiced: true
-     )}
-  end
-
   def handle_info(:sound_gong, %{assigns: %{sounds: sounds}} = socket) do
+    effect =
+      case length(sounds) do
+        x when x > 10 -> :voice
+        _ -> :gong
+      end
+
+    sound_effect = SoundEffect.new(effect)
+
     Process.send_after(self(), :clear_anim, 3000)
-    Process.send_after(self(), :cleanup_audio, 16_000)
+    Process.send_after(self(), :cleanup_audio, sound_effect.duration)
 
     {:noreply,
      assign(socket,
-       sounds: [SoundEffect.new(:gong) | sounds],
+       sounds: [sound_effect | sounds],
        anim_class: "animate__animated animate__slower animate__fadeOut",
        ringing: true,
        clear_after: DateTime.add(DateTime.utc_now(), 3000, :millisecond)
@@ -65,11 +58,14 @@ defmodule SeptaGongWeb.GongLive do
     end
   end
 
-  def handle_info(:cleanup_audio, %{assigns: %{voiced: true}} = socket) do
-    {:noreply, assign(socket, sounds: [])}
-  end
-
   def handle_info(:cleanup_audio, %{assigns: %{sounds: sounds}} = socket) do
-    {:noreply, assign(socket, sounds: Enum.drop(sounds, -1))}
+    updated_sounds =
+      Enum.reject(sounds, fn %{playback_finished: finished_at} ->
+        DateTime.compare(DateTime.utc_now(), finished_at) == :gt
+      end)
+
+    Logger.info("cleanup_audio #{length(updated_sounds)} still playing")
+
+    {:noreply, assign(socket, sounds: updated_sounds)}
   end
 end

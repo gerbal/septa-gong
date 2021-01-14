@@ -6,7 +6,7 @@ defmodule SeptaGong.SoundEffectRenderer do
   @spec render(SeptaGong.SoundEffect.t()) :: Phoenix.LiveView.Rendered.t()
   def render(assigns = %SoundEffect{}) do
     ~L"""
-    <audio autoplay=true src="<%= @file %>">
+    <audio autoplay=true src="<%= @file %>" id="<%= @id %>"></audio>
     """
   end
 end
