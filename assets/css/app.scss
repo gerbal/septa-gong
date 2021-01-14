@@ -96,8 +96,9 @@
   width: 512px;
   height: 512px;
   background: url("/images/gong-still.png");
-  background-size: cover;
+  background-size: contain;
   background-repeat: no-repeat;
   margin-left: auto;
   margin-right: auto;
+  max-width: 100%;
 }
