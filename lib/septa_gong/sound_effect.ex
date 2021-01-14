@@ -15,4 +15,8 @@ defmodule SeptaGong.SoundEffect do
   def new(:gong) do
     %SoundEffect{file: "/sfx/gong.wav"}
   end
+
+  def new(:voice) do
+    %SoundEffect{file: "/sfx/voice.wav"}
+  end
 end

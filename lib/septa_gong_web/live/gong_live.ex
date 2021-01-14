@@ -8,7 +8,8 @@ defmodule SeptaGongWeb.GongLive do
     room_id = "gong:" <> room_id
     Phoenix.PubSub.subscribe(SeptaGong.PubSub, room_id)
 
-    {:ok, assign(socket, sounds: [], anim_class: "", ringing: false, clear_after: 0, room_id: room_id),
+    {:ok,
+     assign(socket, sounds: [], anim_class: "", ringing: false, clear_after: 0, room_id: room_id),
      temporary_assigns: [anim_class: ""]}
   end
 
@@ -27,8 +28,24 @@ defmodule SeptaGongWeb.GongLive do
     {:noreply, assign(socket, anim_class: "", ringing: false)}
   end
 
+  def handle_info(:sound_gong, %{assigns: %{sounds: sounds}} = socket)
+      when length(sounds) >= 10 do
+    Process.send_after(self(), :clear_anim, 3000)
+    Process.send_after(self(), :cleanup_audio, 2_000)
+
+    {:noreply,
+     assign(socket,
+       sounds: [SoundEffect.new(:voice) | sounds],
+       anim_class: "animate__animated animate__slower animate__fadeOut",
+       ringing: true,
+       clear_after: DateTime.add(DateTime.utc_now(), 3000, :millisecond),
+       voiced: true
+     )}
+  end
+
   def handle_info(:sound_gong, %{assigns: %{sounds: sounds}} = socket) do
     Process.send_after(self(), :clear_anim, 3000)
+    Process.send_after(self(), :cleanup_audio, 16_000)
 
     {:noreply,
      assign(socket,
@@ -46,5 +63,13 @@ defmodule SeptaGongWeb.GongLive do
       Process.send_after(self(), :clear_anim, 500)
       {:noreply, socket}
     end
+  end
+
+  def handle_info(:cleanup_audio, %{assigns: %{voiced: true}} = socket) do
+    {:noreply, assign(socket, sounds: [])}
+  end
+
+  def handle_info(:cleanup_audio, %{assigns: %{sounds: sounds}} = socket) do
+    {:noreply, assign(socket, sounds: Enum.drop(sounds, -1))}
   end
 end
