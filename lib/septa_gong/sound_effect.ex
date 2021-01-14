@@ -13,6 +13,6 @@ defmodule SeptaGong.SoundEffect do
 
   @spec new(atom()) :: t()
   def new(:gong) do
-    %SoundEffect{file: "/sfx/gong.mp3"}
+    %SoundEffect{file: "/sfx/gong.wav"}
   end
 end
