@@ -1,9 +1,8 @@
 <section class="phx-hero">
   <h1>I'm a Gong</h1>
 
-
-
-<div class="gong" phx-click="gong">
+<a href="#" phx-click="gong">
+<div class="gong">
   <%= if @ringing do %>
     <img class="<%= @anim_class %>" src="/images/gong-struck.png">
   <% end %>
@@ -14,5 +13,6 @@
       <%= SeptaGong.SoundEffectRenderer.render(sound) %>
     <% end %>
   </div>
+</a>
 
 </section>
